@@ -1,4 +1,5 @@
 import Vue from "vue";
+import '@/icons'
 
 const App = ()=>import('@/views/index')
 
