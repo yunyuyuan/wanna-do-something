@@ -1,15 +1,13 @@
-import Vue from "vue";
+import { createApp } from 'vue'
+import App from '@/views/index'
+import {registerIconSvgComponent} from "@/icons";
+import {registerRouter} from "@/route";
+import store from '@/store'
 
-import '@/icons';
-import favicon from '!file-loader!@/icons/svg/fight.svg'
+export const app = createApp(App);
 
-const App = ()=>import('@/views/index');
+registerIconSvgComponent(app);
+registerRouter(app);
+app.use(store)
 
-document.head.getElementsByClassName('icon-link').forEach(e=>{
-    e.href = favicon
-})
-
-new Vue({
-    el: '#app',
-    render: h => h(App)
-});
+app.mount('#app');

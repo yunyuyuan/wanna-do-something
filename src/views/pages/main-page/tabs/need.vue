@@ -1,15 +1,17 @@
 <template>
-  <div>
-    <strong>点击左边的菜单</strong>
+  <div class="need">
+
   </div>
 </template>
 
 <script>
 export default {
-  name: "index"
+  name: "need"
 }
 </script>
 
 <style scoped lang="scss">
+.need{
 
+}
 </style>

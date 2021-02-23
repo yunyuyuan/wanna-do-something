@@ -5,11 +5,8 @@
 </template>
 
 <script>
-import router from '@/views/route'
-
 export default {
   name: "index",
-  router: router,
 }
 </script>
 
@@ -33,6 +30,5 @@ body, html{
   width: 100%;
   height: 100%;
   position: relative;
-  background: #bdbdbd;
 }
 </style>

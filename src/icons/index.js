@@ -1,5 +1,6 @@
-import Vue from 'vue'
-import IconSvg from '@/icons/IconSvg'// svg组件
+import IconSvg from '@/icons/IconSvg'
 
 // register globally
-Vue.component('svg-icon', IconSvg)
+export function registerIconSvgComponent(app) {
+  app.component('svg-icon', IconSvg)
+}
