@@ -2,7 +2,8 @@ import axios from "axios";
 import siteConfig from '@/site-config'
 
 const apiPrefix = {
-  gitee: 'https://gitee.com/api/v5/repos',
+  // 码云的api需要cors
+  gitee: siteConfig.corsServer+'https://gitee.com/api/v5',
   github: 'https://api.github.com'
 };
 const redirect_uri = {
@@ -60,17 +61,65 @@ export function getToken ({code, platform}){
   })
 }
 
+const githubApi = ({data, token})=>{
+  return new Promise(((resolve, reject) => {
+    axios({
+      url: 'https://api.github.com/graphql',
+      method: 'post',
+      data,
+      headers: {
+        Authorization: 'token '+token
+      }
+    }).then(res=>{
+      console.log(res)
+      resolve(res)
+    }).catch(err=>{
+      reject(err)
+    })
+  }))
+}
+
+const giteeApi = ({data, token})=>{
+  axios({
+    url: 'https://api.github.com/graphql',
+    method: 'post',
+    data,
+    headers: {
+      Authorization: 'token '+token
+    }
+  })
+}
+
 
 // info //
 
 export function getUserInfo ({platform, token}){
-  return axios({
-    url: apiPrefix[platform] + '/user',
-    method: 'get',
-    params: {
-      access_token: token
+  return new Promise(((resolve, reject) => {
+    switch (platform){
+      case "github":
+        axios({
+          url: 'https://api.github.com/user',
+          method: 'get',
+          headers: {
+            Authorization: 'token '+token
+          }
+        }).then(res=>{
+          if (res.status === 200) {
+            const data = res.data;
+            resolve({
+              avatar: data.avatar_url,
+              name: data.name,
+              url: data.html_url
+            })
+          }else{
+            reject(res.statusText)
+          }
+        }).catch(err=>{
+          reject(err)
+        })
+        break
     }
-  })
+  }))
 }
 
 // file //

@@ -11,5 +11,5 @@ module.exports = {
   cdn: `https://cdn.jsdelivr.net/gh/${githubName}/${repo}@latest`,
   timeStamp: new Date().getTime(),
 
-  platforms: ['gitee', 'github']
+  platforms: ['github', 'gitee']
 }
