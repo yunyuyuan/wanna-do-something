@@ -1,15 +1,14 @@
-const name = '云与原',
-  githubName = 'yunyuyuan',
-  repo = 'do-something'
-
 module.exports = {
-  owner: githubName,
-  repo: repo,
+  // project config
+  owner: 'yunyuyuan',
+  repo: 'wanna-do-something',
   email: '326178275@qq.com',
   corsServer: 'https://cors.bridged.cc/',
   domain: 'http://localhost:8080/',
-  cdn: `https://cdn.jsdelivr.net/gh/${githubName}/${repo}@latest`,
+  cdn: `https://cdn.jsdelivr.net/gh/yunyuyuan/wanna-do-something@latest`,
   timeStamp: new Date().getTime(),
 
+  // user config
+  projectName: 'do-something',
   platforms: ['github', 'gitee']
 }

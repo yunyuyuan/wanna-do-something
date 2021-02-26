@@ -10,22 +10,27 @@ export function registerRouter(app) {
         children: [
           {
             path: '',
+            name: 'home',
             component: () => import('@/views/pages/main-page/tabs/index')
           },
           {
             path: 'want-do',
+            name: 'want-do',
             component: () => import('@/views/pages/main-page/tabs/want')
           },
           {
             path: 'need-do',
+            name: 'need-do',
             component: () => import('@/views/pages/main-page/tabs/need')
           },
           {
             path: 'doing',
+            name: 'doing',
             component: () => import('@/views/pages/main-page/tabs/want')
           },
           {
             path: 'settings',
+            name: 'settings',
             component: () => import('@/views/pages/main-page/tabs/settings')
           }
         ],
@@ -33,6 +38,7 @@ export function registerRouter(app) {
       },
       {
         path: '/about',
+        name: 'about',
         component: () => import('@/views/pages/about/index')
       },
       {

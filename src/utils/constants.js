@@ -1,3 +1,4 @@
-export const ConstantStorageKey = {
-  AccessToken: 'token-info'
+module.exports = {
+  AccessToken: 'token-info',
+  DataFolder: '/data',
 }

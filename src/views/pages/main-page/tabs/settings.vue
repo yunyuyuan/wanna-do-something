@@ -44,13 +44,14 @@
 
 <script>
 import {getUserInfo, oauthUrl} from "@/utils/git";
-import {ConstantStorageKey} from "@/utils/constants";
 import siteConfig from '@/site-config'
 import {useStore} from "vuex";
 import {computed} from "@vue/reactivity";
 import IconSvg from "@/icons/IconSvg";
 import dayjs from 'dayjs'
 import SingleButton from "@/views/components/single-button";
+import {_update_state} from "@/store";
+import {AccessToken} from '@/utils/constants'
 
 export default {
   name: "settings",
@@ -62,7 +63,6 @@ export default {
       oauthUrl: oauthUrl,
       oldToken: null,
 
-      userInfo: {},
       avatarStatus: 'err'
     }
   },
@@ -87,33 +87,13 @@ export default {
   setup() {
     const store = useStore()
     const tokenInfo = computed(()=>store.state.tokenInfo)
+    const userInfo = computed(()=>store.state.userInfo)
     const loginStatus = computed(()=>store.state.loginStatus)
 
-    const update_token_info  = (tokenInfo)=>{
-      store.commit('_update_state', {key: 'tokenInfo', val: tokenInfo})
+    const update_state  = (key,val)=>{
+      _update_state(store, '_update_state', {key,val})
     }
-    const update_login_status  = (status)=>{
-      store.commit('_update_state', {key: 'loginStatus', val: status})
-    }
-    const deleteTokenInfo = ()=>{
-      store.commit('_update_state', {key: 'tokenInfo', val: {}})
-    }
-    return { tokenInfo, loginStatus, update_token_info, update_login_status, deleteTokenInfo }
-  },
-  watch: {
-    tokenInfo: {
-      handler () {
-        const {platform, access_token} = this.tokenInfo;
-        getUserInfo({platform, token: access_token})
-        .then(res => {
-          this.userInfo = res;
-          this.avatarStatus = 'loading'
-        }).catch(err=>{
-
-        })
-      },
-      immediate: true,
-    }
+    return { tokenInfo, userInfo, loginStatus, update_state }
   },
   methods: {
     listenToken (){
@@ -124,22 +104,30 @@ export default {
     },
     listenStorageHandle (){
       try {
-        const tokenInfo = JSON.parse(localStorage.getItem(ConstantStorageKey.AccessToken))
+        const tokenInfo = JSON.parse(localStorage.getItem(AccessToken))
         const newToken = tokenInfo.access_token;
         if (newToken !== this.oldToken) {
           window.removeEventListener("storage", this.listenStorageHandle);
-          this.update_token_info(tokenInfo)
-          this.update_login_status('logined')
+          const {platform, access_token} = tokenInfo;
+          getUserInfo({platform, token: access_token})
+          .then(res => {
+            this.update_state('tokenInfo', tokenInfo)
+            this.update_state('userInfo', res)
+            this.update_state('loginStatus', 'logined');
+            this.avatarStatus = 'loading'
+          }).catch(err=>{
+
+          })
         }
       }catch (e){
         console.error(e)
       }
     },
     logout (){
-      localStorage.removeItem(ConstantStorageKey.AccessToken)
-      this.userInfo = {}
-      this.update_login_status('none')
-      this.deleteTokenInfo()
+      localStorage.removeItem(AccessToken)
+      this.update_state('tokenInfo', {})
+      this.update_state('userInfo', {})
+      this.update_state('loginStatus', 'none');
     }
   },
 }

@@ -11,8 +11,10 @@
 
 <script>
 import Menu from "@/views/blocks/menu";
-import {ConstantStorageKey} from "@/utils/constants";
+import {AccessToken} from "@/utils/constants";
 import {useStore} from "vuex";
+import {_update_state} from "@/store";
+import {getUserInfo} from "@/utils/git";
 
 export default {
   name: "the-main",
@@ -23,27 +25,30 @@ export default {
   },
   setup (){
     const store = useStore();
-
-    const update_token_info  = (tokenInfo)=>{
-      store.commit('_update_state', {key: 'tokenInfo', val: tokenInfo})
+    const update_state  = (key,val)=>{
+      _update_state(store, '_update_state', {key,val})
     }
-    const update_login_status  = (status)=>{
-      store.commit('_update_state', {key: 'loginStatus', val: status})
-    }
-    return {update_token_info, update_login_status}
+    return {update_state}
   },
   created() {
     // 检查是否已经登录
-    const tokenInfo = JSON.parse(localStorage.getItem(ConstantStorageKey.AccessToken)||'{}');
+    const tokenInfo = JSON.parse(localStorage.getItem(AccessToken)||'{}');
     if (tokenInfo.expire_data){
       if (tokenInfo.expire_data<0 || (new Date().getTime())<tokenInfo.expire_data*1000){
         // 登录成功
-        this.update_token_info(tokenInfo);
-        this.update_login_status('logined');
+        const {platform, access_token} = tokenInfo;
+        getUserInfo({platform, token: access_token})
+        .then(res => {
+          this.update_state('tokenInfo', tokenInfo)
+          this.update_state('userInfo', res)
+          this.update_state('loginStatus', 'logined');
+        }).catch(err=>{
+
+        })
       }else{
         // 已经过期
-        localStorage.removeItem(ConstantStorageKey.AccessToken);
-        this.update_login_status('expired');
+        localStorage.removeItem(AccessToken);
+        this.update_state('loginStatus', 'expired');
       }
     }
   },

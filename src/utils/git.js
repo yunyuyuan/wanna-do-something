@@ -1,5 +1,6 @@
 import axios from "axios";
 import siteConfig from '@/site-config'
+import {encryptData, stringToGithubContent} from "@/utils/utils";
 
 const apiPrefix = {
   // 码云的api需要cors
@@ -33,11 +34,7 @@ let owner = '',
 
 // base //
 
-export function stringToB64(s) {
-  return btoa(unescape(encodeURIComponent(s)))
-}
-
-function updateInfo ({owner_, repo_}){
+export function updateInfo ({owner_, repo_}){
   owner = owner_;
   repo = repo_;
 }
@@ -64,7 +61,7 @@ export function getToken ({code, platform}){
 const githubApi = ({data, token})=>{
   return new Promise(((resolve, reject) => {
     axios({
-      url: 'https://api.github.com/graphql',
+      url: 'https://api.github.com/',
       method: 'post',
       data,
       headers: {
@@ -81,7 +78,7 @@ const githubApi = ({data, token})=>{
 
 const giteeApi = ({data, token})=>{
   axios({
-    url: 'https://api.github.com/graphql',
+    url: 'https://api.github.com/',
     method: 'post',
     data,
     headers: {
@@ -107,6 +104,7 @@ export function getUserInfo ({platform, token}){
           if (res.status === 200) {
             const data = res.data;
             resolve({
+              login: data.login,
               avatar: data.avatar_url,
               name: data.name,
               url: data.html_url
@@ -123,29 +121,56 @@ export function getUserInfo ({platform, token}){
 }
 
 // file //
-
-function makeFile (path, content, msg){
-  return axios({
-    url: apiPrefix+`${owner}/${repo}/contents/${path}`,
-    method: 'POST',
-    data: {
-      owner, repo, path, msg,
-      content: stringToB64(content),
-    }
-  })
+const fixPathUrl = (path)=>{
+  return path.replace(/^\/?(.*)$/, '$1')
 }
 
-function getFile (path){
-  return axios({
-    url: 'https://gitee.com/yunyuyuan/do-something/raw/master/'+path.replace(/^\//, ''),
-    method: 'get'
-  })
+export function makeFile ({owner, path, platform, token, content, secret}){
+  switch (platform) {
+    case "github":
+      return new Promise(((resolve, reject) => {
+        axios({
+          url: `https://api.github.com/repos/${owner}/${siteConfig.projectName}/contents/${fixPathUrl(path)}`,
+          method: 'put',
+          data: {
+            message: 'make file:'+path,
+            content: stringToGithubContent(content, secret)
+          },
+          headers: {
+            Authorization: 'token ' + token
+          }
+        }).then(res => {
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      }))
+  }
 }
 
-function updateFile (path){
+export function getFile ({owner, path, platform, token}){
+  switch (platform) {
+    case "github":
+      return new Promise(((resolve, reject) => {
+        axios({
+          url: `https://api.github.com/repos/${owner}/${siteConfig.projectName}/contents/${fixPathUrl(path)}`,
+          method: 'get',
+          headers: {
+            Authorization: 'token ' + token
+          }
+        }).then(res => {
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      }))
+  }
+}
+
+export function updateFile (path){
 
 }
 
-function deleteFile (path){
+export function deleteFile (path){
 
 }

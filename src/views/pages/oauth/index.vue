@@ -7,7 +7,7 @@
 
 <script>
 import {getToken} from "@/utils/git";
-import {ConstantStorageKey} from "@/utils/constants";
+import {AccessToken} from "@/utils/constants";
 
 export default {
   name: "index",
@@ -37,7 +37,7 @@ export default {
         }
         if (access_token){
           // 本地存储
-          localStorage.setItem(ConstantStorageKey.AccessToken, JSON.stringify({
+          localStorage.setItem(AccessToken, JSON.stringify({
             access_token, expire_data, refresh_token, platform
           }));
           this.icon = 'success';
