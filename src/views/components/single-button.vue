@@ -1,6 +1,6 @@
 <template>
-  <div class="single-button" :style="calcStyle">
-    <span>{{text}}</span>
+  <div class="single-button" :style="calcStyle" :type="type">
+    <span v-if="$slots.default"><slot></slot></span>
   </div>
 </template>
 
@@ -8,27 +8,18 @@
 export default {
   name: "single-button",
   props: {
-    text: {
-      type: String,
-    },
-    color: {
-      type: String,
-      default: 'white'
-    },
-    bg: {
-      type: String,
-      default: '#1d78ff'
-    },
     size: {
       type: Number,
-      default: 0.8
+      default: 0.9
+    },
+    type: {
+      type: String,
+      default: 'none'
     }
   },
   computed: {
     calcStyle (){
       return {
-        color: this.color,
-        background: this.bg,
         fontSize: this.size+'rem'
       }
     }
@@ -39,8 +30,36 @@ export default {
 <style scoped lang="scss">
 .single-button{
   border-radius: .15rem;
-  padding: .25rem .8rem;
   cursor: pointer;
   box-shadow: 0 0 .3rem rgba(0, 0, 0, .3);
+  transition: all .15s linear;
+  border: 1px solid;
+  display: inline-block;
+  vertical-align: center;
+  margin: .5rem;
+  &[type=none]{
+    background: #fcfcfc;
+    color: black;
+    border-color: #a7a7a7;
+  }
+  &[type=primary]{
+    background: #395bff;
+    color: white;
+    border-color: #314ee0;
+  }
+  &[type=danger]{
+    background: #ff3950;
+    color: white;
+    border-color: #dc3348;
+  }
+  &[type=warn]{
+    background: #ff7839;
+    color: white;
+    border-color: #d2612b;
+  }
+  >span{
+    margin: .3em 1em;
+    display: inline-block;
+  }
 }
 </style>

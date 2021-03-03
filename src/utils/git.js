@@ -167,8 +167,54 @@ export function getFile ({owner, path, platform, token}){
   }
 }
 
-export function updateFile (path){
+export function getFileWithCreate ({owner, path, platform, token, content, secret}){
+  return new Promise((resolve, reject) => {
+    getFile({owner, path, platform, token}).then(res=>{
+      resolve(res)
+    }).catch(err=>{
+      if (err.response.status === 404){
+        //创建文件
+        makeFile({
+          owner,
+          platform,
+          token,
+          path,
+          content,
+          secret
+        }).then(res=>{
+          resolve(res)
+        }).catch(err=>{
+          reject('create file err===' + err)
+        })
+      }else{
+        reject('find file err===' + err)
+      }
+    })
+  })
+}
 
+export function updateFile ({owner, path, platform, token, content, sha, secret}){
+  switch (platform) {
+    case "github":
+      return new Promise(((resolve, reject) => {
+        axios({
+          url: `https://api.github.com/repos/${owner}/${siteConfig.projectName}/contents/${fixPathUrl(path)}`,
+          method: 'put',
+          data: {
+            message: 'update file:'+path,
+            content: stringToGithubContent(content, secret),
+            sha,
+          },
+          headers: {
+            Authorization: 'token ' + token
+          }
+        }).then(res => {
+          resolve(res)
+        }).catch(err => {
+          reject(err)
+        })
+      }))
+  }
 }
 
 export function deleteFile (path){

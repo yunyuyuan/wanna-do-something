@@ -21,7 +21,7 @@
           <icon-svg v-if="avatarStatus!=='suc'" :name="avatarStatus==='loading'?'loading':'default-avatar'"/>
           <img v-if="userInfo.avatar" :src="userInfo.avatar" @load="avatarStatus='suc'" @err="avatarStatus='err'" alt="avatar"/>
         </a>
-        <single-button @click="logout" text="退出" bg="#ff4d4d"/>
+        <single-button @click="logout" type="danger">退出</single-button>
       </div>
       <div class="info" flex>
         <a target="_blank" :href="userInfo.url">{{userInfo.name||'Unknown'}}</a>

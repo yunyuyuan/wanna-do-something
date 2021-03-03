@@ -1,5 +1,6 @@
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
+import {useStore} from "vuex";
 
 export function encryptData (data, secret){
   return AES.encrypt(data, secret).toString()
