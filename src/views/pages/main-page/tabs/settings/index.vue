@@ -9,7 +9,7 @@
         </select>
       </label>
       <a @click="listenToken" target="_blank" :href="oauthUrl[platform]">
-        <single-button text="登录"/>
+        <single-button>登录</single-button>
       </a>
     </div>
     <div v-else-if="loginStatus==='expired'" :class="loginStatus">
