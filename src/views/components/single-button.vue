@@ -1,5 +1,5 @@
 <template>
-  <div class="single-button" :style="calcStyle" :type="type">
+  <div @click.stop.prevent="click" class="single-button" :class="{disabled: disabled}" :style="calcStyle" :type="type">
     <span v-if="$slots.default"><slot></slot></span>
   </div>
 </template>
@@ -15,13 +15,21 @@ export default {
     type: {
       type: String,
       default: 'none'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
+  emits: ['click'],
   computed: {
     calcStyle (){
       return {
         fontSize: this.size+'rem'
       }
+    },
+    click (e){
+      if (!this.disabled) this.$emit('click', e)
     }
   }
 }
@@ -37,6 +45,12 @@ export default {
   display: inline-block;
   vertical-align: center;
   margin: .5rem;
+  &.disabled{
+    cursor: not-allowed;
+    background: gray !important;
+    border-color: gray !important;
+    color: white !important;
+  }
   &[type=none]{
     background: #fcfcfc;
     color: black;

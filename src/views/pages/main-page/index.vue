@@ -2,11 +2,13 @@
   <div class="main">
     <Menu/>
     <div class="contain">
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
+      <div class="inner">
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -15,7 +17,6 @@
 import Menu from "@/views/blocks/menu";
 import {AccessToken} from "@/utils/constants";
 import {useStore} from "vuex";
-import {_update_state} from "@/store";
 import {getUserInfo} from "@/utils/git";
 
 export default {
@@ -28,9 +29,14 @@ export default {
   setup (){
     const store = useStore();
     const update_state  = (key,val)=>{
-      _update_state(store, '_update_state', {key,val})
+      store.commit('_update_state', {key, val});
     }
     return {update_state}
+  },
+  provide: {
+    update_state (a, b){
+      this._update_state(a, b)
+    }
   },
   created() {
     // 检查是否已经登录
@@ -68,11 +74,18 @@ export default {
     width: calc(100% - 5.5rem);
     height: 100%;
     margin: 0 0 0 5.5rem;
-    background: #f8f8f8;
+    background: #f5f5f5;
     box-shadow: 0 0 .5rem rgba(0, 0, 0, .2);
-    >div{
-      width: 95%;
-      margin: 0 2.5%;
+    overflow-y: auto;
+    >.inner{
+      width: calc(96% - 1.6rem);
+      min-height: calc(100% - 3.6rem);
+      margin: 1rem 2%;
+      padding: .8rem;
+      background: white;
+      border-radius: .4rem;
+      >div {
+      }
     }
   }
 }

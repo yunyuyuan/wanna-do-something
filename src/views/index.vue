@@ -20,9 +20,24 @@ body, html{
   margin: 0;
   padding: 0;
   outline: none;
+  flex-shrink: 0;
   &[flex]{
     display: flex;
     align-items: center;
+  }
+}
+input, textarea, select{
+  padding: .4rem .8rem;
+  border-radius: .2rem;
+  font-size: .9rem;
+  border: 1px solid #bdbdbd;
+  background: white;
+  transition: border .15s linear;
+  &:hover{
+    border-color: gray;
+  }
+  &:focus{
+    border-color: #395bff;
   }
 }
 

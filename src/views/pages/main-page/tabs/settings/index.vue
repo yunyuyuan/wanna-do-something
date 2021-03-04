@@ -89,12 +89,9 @@ export default {
     const tokenInfo = computed(()=>store.state.tokenInfo)
     const userInfo = computed(()=>store.state.userInfo)
     const loginStatus = computed(()=>store.state.loginStatus)
-
-    const update_state  = (key,val)=>{
-      _update_state(store, '_update_state', {key,val})
-    }
-    return { tokenInfo, userInfo, loginStatus, update_state }
+    return { tokenInfo, userInfo, loginStatus }
   },
+  inject: ['update_state'],
   methods: {
     listenToken (){
       if (this.tokenInfo) {

@@ -29,7 +29,3 @@ export default createStore({
     }
   }
 })
-
-export function _update_state (store, type, {key, val}){
-  store.commit(type, {key, val});
-}
