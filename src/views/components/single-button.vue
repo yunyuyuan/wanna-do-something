@@ -1,5 +1,5 @@
 <template>
-  <div @click.stop.prevent="click" class="single-button" :class="{disabled: disabled}" :style="calcStyle" :type="type">
+  <div @click="click" class="single-button" :class="{disabled: disabled}" :style="calcStyle" :type="type">
     <span v-if="$slots.default"><slot></slot></span>
   </div>
 </template>
