@@ -75,7 +75,6 @@ export default {
       return `${DataFolder}/need-do${dayjs().format('/YYYY/MM/DD')}.json`
     },
     altered (){
-      console.log('change')
       if (this.originData.length !== this.newData.length) return true;
       for (let idx=0;idx<this.originData.length;idx++){
         for (const key of Object.keys(this.originData[idx])){

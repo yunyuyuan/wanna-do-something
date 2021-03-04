@@ -15,7 +15,7 @@
         <icon-svg :name="data.editing?'ok':'edit'"/>
       </span>
       <span v-if="!data.editing" class="finish" @click="$emit('change-finished', !data.finished)"></span>
-      <span @click="doDelete" class="delete" v-else flex>
+      <span @click="$emit('delete')" class="delete" v-else flex>
         <icon-svg name="delete"/>
       </span>
     </label>
@@ -40,9 +40,6 @@ export default {
     }
   },
   methods: {
-    doDelete (){
-      this.$emit('delete')
-    }
   }
 }
 </script>
